@@ -1,0 +1,21 @@
+2020-03-10 13:00:35,485 - instabot version: 0.113.0 (bot) - INFO - Instabot version: 0.113.0 Started
+2020-03-10 13:00:35,486 - instabot version: 0.113.0 (bot) - DEBUG - Bot imported from C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python37_64\lib\site-packages\instabot\bot\bot.py
+2020-03-10 13:00:40,926 - instabot version: 0.113.0 (api_login) - DEBUG - Loading cookies
+2020-03-10 13:00:40,927 - instabot version: 0.113.0 (api_login) - DEBUG - Loading uuids
+2020-03-10 13:00:40,927 - instabot version: 0.113.0 (api_login) - INFO - Recovery from C:\Users\Chen Joe\Source\Repos\TestIG\TestIG/config/joe_try_something_uuid_and_cookie.json: COOKIE True - UUIDs True - TIMING, DEVICE and ...
+- user-agent=Instagram 117.0.0.28.123 Android (28/9.0; 420dpi; 1080x1920; OnePlus; ONEPLUS A3003; OnePlus3; qcom; en_US; 180322800)
+- phone_id=f861f950-24e8-488a-97aa-8d4ea34261a8
+- uuid=390d7a3d-7812-4a24-a3ae-bd5afbae7e7e
+- client_session_id=c1e32ded-b2f3-4b4e-a684-d31c0ea790cc
+- device_id=android-9b3bfbf4442059f6
+2020-03-10 13:00:40,931 - instabot version: 0.113.0 (api_login) - INFO - LOGIN FLOW! Just logged-in: False
+2020-03-10 13:00:42,225 - instabot version: 0.113.0 (api) - DEBUG - POST to endpoint: feed/timeline/ returned response: <Response [200]>
+2020-03-10 13:00:42,525 - instabot version: 0.113.0 (api) - DEBUG - POST to endpoint: feed/reels_tray/ returned response: <Response [200]>
+2020-03-10 13:00:42,527 - instabot version: 0.113.0 (api) - INFO - Logged-in successfully as 'joe_try_something'!
+2020-03-10 13:00:42,528 - instabot version: 0.113.0 (bot_checkpoint) - DEBUG - Loading Checkpoint file from: C:\Users\Chen Joe\Source\Repos\TestIG\TestIG/config/joe_try_something.checkpoint
+2020-03-10 13:00:42,807 - instabot version: 0.113.0 (api) - DEBUG - GET to endpoint: users/vanan___/usernameinfo/ returned response: <Response [200]>
+2020-03-10 13:00:44,515 - instabot version: 0.113.0 (api) - DEBUG - GET to endpoint: feed/user/1087614349/?max_id=&min_timestamp=None&rank_token=31502893963_390d7a3d-7812-4a24-a3ae-bd5afbae7e7e&ranked_content=true returned response: <Response [200]>
+2020-03-10 13:00:45,056 - instabot version: 0.113.0 (api) - DEBUG - GET to endpoint: feed/user/1087614349/?max_id=1813252233886829934_1087614349&min_timestamp=None&rank_token=31502893963_390d7a3d-7812-4a24-a3ae-bd5afbae7e7e&ranked_content=true returned response: <Response [200]>
+2020-03-10 13:00:45,216 - instabot version: 0.113.0 (bot_checkpoint) - DEBUG - Saving Checkpoint file to: C:\Users\Chen Joe\Source\Repos\TestIG\TestIG/config/joe_try_something.checkpoint
+2020-03-10 13:00:45,219 - instabot version: 0.113.0 (bot) - INFO - Total follows: 3/92
+2020-03-10 13:00:45,220 - instabot version: 0.113.0 (bot) - INFO - Total requests: 46
