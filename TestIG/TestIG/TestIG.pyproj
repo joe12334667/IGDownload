@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>71fa60f0-409d-4253-a212-c6ad31e56bc0</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>DownloadHashtagsFromCategory.py</StartupFile>
+    <StartupFile>testJson.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -36,6 +36,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TestIG.py" />
+    <Compile Include="testJson.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />
