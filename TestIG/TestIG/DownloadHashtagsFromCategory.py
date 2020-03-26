@@ -6,15 +6,12 @@ import csv
 from instaloader import Instaloader, Profile
 
 
-
-
-
 #--------------------------------DownloadHashtagsFromCategory----------------------------------------------------------
 def DownloadHashtagsFromCategory(HashTags , category):
     HashTag = "#"+ HashTags
     FileName =  HashTags + ".txt"
 
-
+    #資料夾與檔案是否存在
     if os.path.isfile(os.getcwd() + "/"+ category + "/" + FileName):
         file =open(os.getcwd() + "/"+ category + "/" + FileName , mode = 'a+' , encoding="utf-8")
         print("檔案存在。")
@@ -26,16 +23,15 @@ def DownloadHashtagsFromCategory(HashTags , category):
         print("檔案不存在，已創立" + FileName  )
 
 
-
+    #計時開始
     tStart = time.time()
-
 
 
     # Get instance
     L = Instaloader(quiet=True, compress_json=False)
 
     AllHashTags = list()
-   
+    
     i = 0
     count_likes = 0
     for post in L.get_hashtag_posts(HashTag[1:]):
@@ -50,11 +46,14 @@ def DownloadHashtagsFromCategory(HashTags , category):
         print("hashtags : " , post.caption_hashtags)
         count_likes+=post.likes
 
+        #確認是否新增進HashTags
         for item in post.caption_hashtags:
             if is_all_chinese(item):
                 AllHashTags.append(item)
         
         #L.download_post(post, target=profile.username)
+
+        #統計多少篇
         if i==100 :
            break
 
@@ -62,6 +61,7 @@ def DownloadHashtagsFromCategory(HashTags , category):
     AllHashTags = set(AllHashTags)
     print("All HashTags : " ,  AllHashTags  )
     count = 0
+    #寫檔
     for hashtag in AllHashTags:
         if(count != 0):
             file.write(",")
@@ -77,6 +77,7 @@ def DownloadHashtagsFromCategory(HashTags , category):
 
 #--------------------------------DownloadHashtagsFromCategory----------------------------------------------------------
 #--------------------------------is_contains_chinese----------------------------------------------------------
+#是否中文
 def is_contains_chinese(strs):
     for _char in strs:
         if '\u4e00' <= _char <= '\u9fa5':
