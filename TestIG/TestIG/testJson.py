@@ -8,7 +8,7 @@ from instaloader import Instaloader, Profile
 
 
 #--------------------------------DownloadHashtagsFromCategory----------------------------------------------------------
-def DownloadHashtagsFromCategory(HashTags):
+def DownloadHashtagsFromCategory(HashTags , RunTime):
     HashTag = "#"+ HashTags
     FileName =  HashTags + ".json"
 
@@ -57,7 +57,7 @@ def DownloadHashtagsFromCategory(HashTags):
         #L.download_post(post, target=profile.username)
 
         #統計多少篇
-        if i==100 :
+        if i== RunTime :
            break
 
     #print("total ig likes : " , count_likes )
@@ -119,7 +119,7 @@ with open(os.getcwd() + "/" + "#"+category+".txt", newline='' , encoding="utf-8"
             #print(i)
 
             print(item)
-            data[category].append(DownloadHashtagsFromCategory(item))
+            data[category].append(DownloadHashtagsFromCategory(item , 100))
             #DownloadHashtagsFromCategory(item)
             #if(i==2):
             #    break

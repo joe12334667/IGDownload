@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>71fa60f0-409d-4253-a212-c6ad31e56bc0</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>testJson.py</StartupFile>
+    <StartupFile>DowmloadHashtagMutiThread.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,6 +23,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DowmloadHashtagMutiThread.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DownloadHashtagsFromCategory.py">
       <SubType>Code</SubType>
     </Compile>
