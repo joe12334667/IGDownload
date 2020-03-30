@@ -20,8 +20,8 @@ def DownloadHashtagsFromCategory(HashTags , RunTime):
     AllHashTags = list()
     
     countRunTime = 0
-
-    for post in L.get_hashtag_posts(HashTag[1:]):
+    posts = L.get_hashtag_posts(HashTag[1:])
+    for post in posts :
 
         #沒有hashtags
         #因為當字符串或集合為空時，其值被隱式地賦為False。

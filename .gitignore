@@ -1,6 +1,8 @@
 
 *食.json
-
+*衣.json
+*住.json
+*行.json
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
