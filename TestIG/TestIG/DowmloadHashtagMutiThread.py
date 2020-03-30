@@ -5,6 +5,7 @@ from datetime import datetime
 from itertools import dropwhile, takewhile
 import os
 import csv
+import re
 import json
 from instaloader import Instaloader, Profile
 
@@ -19,24 +20,23 @@ def DownloadHashtagsFromCategory(HashTags , RunTime):
     AllHashTags = list()
     
     countRunTime = 0
-    try:
-        for post in L.get_hashtag_posts(HashTag[1:]):
 
-            #沒有hashtags
-            #因為當字符串或集合為空時，其值被隱式地賦為False。
-            if not post.caption_hashtags :
-                    continue
+    for post in L.get_hashtag_posts(HashTag[1:]):
 
-            countRunTime +=1
-            #確認是否新增進HashTags
-            for item in post.caption_hashtags:
-                if is_all_chinese(item):
-                    AllHashTags.append(item)
-            #統計多少篇
-            if countRunTime == RunTime :
-               break
-    except: 
-        print("call too many api")
+        #沒有hashtags
+        #因為當字符串或集合為空時，其值被隱式地賦為False。
+        if not post.caption_hashtags :
+                continue
+
+        countRunTime +=1
+        #確認是否新增進HashTags
+        for item in post.caption_hashtags:
+            if is_all_chinese_And_English(item):
+                AllHashTags.append(item)
+        #統計多少篇
+        if countRunTime == RunTime :
+            break
+
     #轉set以實現不重複陣列
     AllHashTags = set(AllHashTags)
 
@@ -56,6 +56,14 @@ def is_all_chinese(strs):
         if not '\u4e00' <= _char <= '\u9fa5':
             return False
     return True
+
+def is_all_chinese_And_English(strs):
+    ret_search = re.search("^[\u4e00-\u9fa5_a-zA-Z0-9]+$",strs) #掃描整個字串返回第一個匹配到的元素並結束，匹配不到返回None
+    if(ret_search):
+        return True
+    return False
+
+
 #--------------------------------is_contains_chinese----------------------------------------------------------
 # Worker 類別，負責處理資料
 class Worker(threading.Thread):
@@ -93,7 +101,7 @@ with open(os.getcwd() + "/" + "#"+category+".txt", newline='' , encoding="utf-8"
             CatQueue.put(item)
 
 # 建立兩個 Worker
-my_worker1 = Worker(CatQueue, ReQueue ,  100 ,1)
+my_worker1 = Worker(CatQueue, ReQueue , 100 , 1)
 my_worker2 = Worker(CatQueue, ReQueue , 100 , 2)
 
 # 讓 Worker 開始處理資料
@@ -112,7 +120,7 @@ while ReQueue.qsize() > 0:
     data[category].append(ReQueue.get())
 
 
-FileName = time.strftime("%Y-%m-%d", time.localtime()) + category + ".json"
+FileName = time.strftime("%Y-%m-%d_%H-%M") + category + ".json"
 
 # 資料夾與檔案是否存在
 if os.path.isfile(os.getcwd() + "/"+ category + "/" + FileName):
