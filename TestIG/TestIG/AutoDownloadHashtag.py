@@ -4,7 +4,7 @@ import time
 tStart = time.time()
 category = ["食" , "衣" , "住" , "行" ]
 for cate in category:
-    DownloadHashtagMutiThread.MutiTheadDownload(cate ,10)
+    DownloadHashtagMutiThread.MutiTheadDownload(cate ,100)
     print(cate , " finish")
     time.sleep(5)
 
