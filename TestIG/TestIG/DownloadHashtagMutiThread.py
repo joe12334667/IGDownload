@@ -13,14 +13,16 @@ from instaloader import Instaloader, Profile
 #--------------------------------DownloadHashtagsFromCategory----------------------------------------------------------
 def DownloadHashtagsFromCategory(HashTags , RunTime):
     HashTag = "#"+ HashTags
-
+    lock = threading.Lock() 
     # Get instance
-    L = Instaloader(quiet=True, compress_json=False)
+    L = Instaloader(quiet=True, compress_json=False , max_connection_attempts = 0)
 
     AllHashTags = list()
     
     countRunTime = 0
+    lock.acquire() 
     posts = L.get_hashtag_posts(HashTag[1:])
+    lock.release()
     for post in posts :
 
         #沒有hashtags
@@ -79,6 +81,8 @@ class Worker(threading.Thread):
             cat = self.queue.get()
             print("worker " , self.work , " ",cat)
             self.requeue.put( DownloadHashtagsFromCategory(cat , self.num) )
+            time.sleep(0.5)
+
 #--------------------------------------------------------------------------------------------------------------
 
 def MutiTheadDownload(cate , RunTime):
@@ -109,12 +113,13 @@ def MutiTheadDownload(cate , RunTime):
     # 讓 Worker 開始處理資料
     print("my_worker1 start")
     my_worker1.start()
+    time.sleep(3)
     print("my_worker2 start")
     my_worker2.start()
 
     # 等待所有 Worker 結束
-    my_worker1.join()
-    my_worker2.join()
+    my_worker1.join(100)
+    my_worker2.join(100)
 
 
     print("Done." )
