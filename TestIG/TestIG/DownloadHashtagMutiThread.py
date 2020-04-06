@@ -42,7 +42,7 @@ def DownloadHashtagsFromCategory(HashTags , RunTime):
     #轉set以實現不重複陣列
     AllHashTags = set(AllHashTags)
 
-    data = {"hashtags" : HashTag , "AllHashTags" : list(AllHashTags)}
+    data = {"hashtags" : HashTag , "AllHashTags" : list(AllHashTags) , "Time" : time.strftime("%Y-%m-%d_%H-%M")}
     return data
 #--------------------------------DownloadHashtagsFromCategory----------------------------------------------------------
 #--------------------------------is_contains_chinese----------------------------------------------------------
@@ -107,20 +107,24 @@ def MutiTheadDownload(cate , RunTime):
                 CatQueue.put(item)
 
     # 建立兩個 Worker
-    my_worker1 = Worker(CatQueue, ReQueue , RunTime , 1)
-    my_worker2 = Worker(CatQueue, ReQueue , RunTime , 2)
 
     # 讓 Worker 開始處理資料
-    print("my_worker1 start")
-    my_worker1.start()
-    time.sleep(3)
-    print("my_worker2 start")
-    my_worker2.start()
+    
 
     # 等待所有 Worker 結束
-    my_worker1.join(100)
-    my_worker2.join(100)
+   
+    while CatQueue.qsize() > 0:
 
+        my_worker1 = Worker(CatQueue, ReQueue , RunTime , 1)
+        my_worker2 = Worker(CatQueue, ReQueue , RunTime , 2)
+
+        print("my_worker1 start")
+        my_worker1.start()
+        time.sleep(3)
+        print("my_worker2 start")
+        my_worker2.start()
+        my_worker1.join(60)
+        my_worker2.join(60)
 
     print("Done." )
     while ReQueue.qsize() > 0:

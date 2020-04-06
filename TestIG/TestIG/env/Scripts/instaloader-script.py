@@ -1,4 +1,4 @@
-#!"C:\Users\Chen Joe\Documents\GitHub\IGDownload\TestIG\TestIG\env\Scripts\python.exe"
+#!C:\IGDownload\TestIG\TestIG\env\Scripts\python.exe
 # EASY-INSTALL-ENTRY-SCRIPT: 'instaloader==4.3','console_scripts','instaloader'
 __requires__ = 'instaloader==4.3'
 import re
