@@ -8,10 +8,11 @@ finaltimes = {}
 while True :
     runtime +=1
     tStart = time.time()
-    for cate in category:
-        DownloadHashtagMutiThread.MutiTheadDownload(cate ,100)
-        print(cate , " finish")
+    #for cate in category:
+    #    DownloadHashtagMutiThread.MutiTheadDownloadByCategory(cate ,100)
+    #    print(cate , " finish")
     
+    DownloadHashtagMutiThread.DownloadAllHashTags(100)
 
     tEnd = time.time()
     finaltime = tEnd - tStart

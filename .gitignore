@@ -3,6 +3,11 @@
 *衣.json
 *住.json
 *行.json
+食/
+HashTags/
+衣/
+行/
+住/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

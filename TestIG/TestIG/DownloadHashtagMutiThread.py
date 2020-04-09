@@ -21,7 +21,7 @@ def DownloadHashtagsFromCategory(HashTags , RunTime):
     
     countRunTime = 0
     lock.acquire() 
-    posts = L.get_hashtag_posts(HashTag[1:])
+    posts = L.get_hashtag_posts(HashTags)
     lock.release()
     for post in posts :
 
@@ -42,7 +42,7 @@ def DownloadHashtagsFromCategory(HashTags , RunTime):
     #轉set以實現不重複陣列
     AllHashTags = set(AllHashTags)
 
-    data = {"hashtags" : HashTag , "AllHashTags" : list(AllHashTags) , "Time" : time.strftime("%Y-%m-%d_%H-%M")}
+    data = {"hashtags" : HashTag , "AllHashTags" : list(AllHashTags) , "Time" : time.strftime("%Y-%m-%d_%H-%M-$S")}
     return data
 #--------------------------------DownloadHashtagsFromCategory----------------------------------------------------------
 #--------------------------------is_contains_chinese----------------------------------------------------------
@@ -78,14 +78,38 @@ class Worker(threading.Thread):
     def run(self):
         while self.queue.qsize() > 0:
             # 取得新的資料
-            cat = self.queue.get()
-            print("worker " , self.work , " ",cat)
-            self.requeue.put( DownloadHashtagsFromCategory(cat , self.num) )
-            time.sleep(0.5)
+            HashTag = self.queue.get()
+            print("worker " , self.work , " ",HashTag)
+            self.requeue.put( DownloadHashtagsFromCategory(HashTag , self.num) )
 
-#--------------------------------------------------------------------------------------------------------------
 
-def MutiTheadDownload(cate , RunTime):
+
+class WorkerIncludeDownload(threading.Thread):
+    def __init__(self, queue , requeue , data , num ,work):
+        threading.Thread.__init__(self)
+        self.queue = queue
+        self.num = num
+        self.requeue = requeue
+        self.work = work
+        self.data = data
+        self.lock = threading.Lock()
+        self.data = data
+    def run(self):
+        while self.queue.qsize() > 0:
+            # 取得新的資料
+            HashTag = self.queue.get()
+            print("worker " , self.work , " ",HashTag)
+            self.requeue.put( DownloadHashtagsFromCategory(HashTag , self.num) )
+            if self.requeue.qsize() >= 100 :
+                if self.lock.acquire():
+                    print("Lock Thead and output json")
+                    while self.requeue.qsize() > 0:
+                        self.data["HashTags"].append(self.requeue.get())
+                    WriteHashTagsJson(self.data)
+
+#-----------------------------------------------MutiTheadDownloadByCategory---------------------------------------------------------------
+
+def MutiTheadDownloadByCategory(cate , RunTime):
 
     tStart = time.time()
     # 建立佇列
@@ -106,25 +130,27 @@ def MutiTheadDownload(cate , RunTime):
             for item in row:
                 CatQueue.put(item)
 
-    # 建立兩個 Worker
 
-    # 讓 Worker 開始處理資料
+   
+
     
-
-    # 等待所有 Worker 結束
    
     while CatQueue.qsize() > 0:
 
+        # 建立兩個 Worker
         my_worker1 = Worker(CatQueue, ReQueue , RunTime , 1)
         my_worker2 = Worker(CatQueue, ReQueue , RunTime , 2)
 
+        # 讓 Worker 開始處理資料
         print("my_worker1 start")
         my_worker1.start()
         time.sleep(3)
         print("my_worker2 start")
         my_worker2.start()
+        # 等待所有 Worker 結束
         my_worker1.join(60)
         my_worker2.join(60)
+
 
     print("Done." )
     while ReQueue.qsize() > 0:
@@ -151,3 +177,79 @@ def MutiTheadDownload(cate , RunTime):
     tEnd = time.time()
     print("time : %f s" % (tEnd - tStart))
 
+
+
+#-------------------------------------------DownloadAllHashTags-----------------------------------------------------------
+
+def DownloadAllHashTags(RunTime):
+    tStart = time.time()
+    # 建立佇列
+    HashTagQueue = queue.Queue(0)
+    ReQueue = queue.Queue(0)
+    data = {"HashTags" : []}
+    fileName = "HashTags.json"
+
+    # 將資料放入佇列 
+    with open(os.getcwd() + "/" + fileName , mode = 'r' , encoding="utf-8") as file:
+
+        json_array = json.load(file)
+
+        for item in json_array["HashTags"]:
+            HashTagQueue.put(item)
+        
+            
+ 
+    while HashTagQueue.qsize() > 0:
+
+        # 建立兩個 Worker
+        my_worker1 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 1)
+        my_worker2 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 2)
+
+        # 讓 Worker 開始處理資料
+        print("my_worker1 start")
+        my_worker1.start()
+        time.sleep(3)
+        print("my_worker2 start")
+        my_worker2.start()
+        # 等待所有 Worker 結束
+        my_worker1.join(60)
+        my_worker2.join(60)
+
+
+    print("Done." )
+    i = 0
+    while ReQueue.qsize() > 0:
+        data["HashTags"].append(ReQueue.get())
+        i+=1
+        if i>= 100 :
+            WriteHashTagsJson(data)
+            data["HashTags"].clear()
+            i = 0
+
+    if ReQueue.qsize() <= 0 and data["HashTags"] :
+        WriteHashTagsJson(data)
+        data["HashTags"].clear()
+
+
+    tEnd = time.time()
+    print("time : %f s" % (tEnd - tStart))
+    
+
+
+def WriteHashTagsJson(data):
+    FileName = time.strftime("%Y-%m-%d_%H-%M-%S")  + ".json"
+
+    # 資料夾與檔案是否存在
+    if os.path.isfile(os.getcwd() + "/"+ "HashTags" + "/" + FileName):
+        file =open(os.getcwd() + "/"+ "HashTags" + "/" + FileName , mode = 'w' , encoding="utf-8")
+        print("檔案存在。")
+
+    else:
+        if not os.path.isdir(os.getcwd() + "/"+ "HashTags"):
+            os.mkdir("HashTags")
+        file = open(os.getcwd() +"/" + "HashTags"+ "/" + FileName , mode = 'w' , encoding="utf-8")
+        print("檔案不存在，已創立" + FileName  )
+
+    # 寫入json檔並調整格式
+    file.write(json.dumps(data,ensure_ascii=False , indent=4, separators=(',', ': ')))
+    file.close()
