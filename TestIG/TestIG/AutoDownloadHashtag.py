@@ -1,6 +1,8 @@
 import DownloadHashtagMutiThread
+import testMongoDB
 import time 
 import pprint
+import testMongoDB
 
 runtime = 0
 category = ["食" , "衣" , "住" , "行" ]
@@ -20,4 +22,6 @@ while True :
     print("runtime :" ,runtime , "final time : %f s" % finaltime )
     print("final time : ")
     pprint.pprint(finaltimes)
+    
+    testMongoDB.WriteAllHashTagsToMongoDB()
     time.sleep(3600)

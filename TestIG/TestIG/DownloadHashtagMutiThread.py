@@ -92,6 +92,7 @@ class WorkerIncludeDownload(threading.Thread):
         self.requeue = requeue
         self.work = work
         self.data = data
+        #執行緒鎖
         self.lock = threading.Lock()
         self.data = data
     def run(self):
@@ -99,13 +100,17 @@ class WorkerIncludeDownload(threading.Thread):
             # 取得新的資料
             HashTag = self.queue.get()
             print("worker " , self.work , " ",HashTag)
-            self.requeue.put( DownloadHashtagsFromCategory(HashTag , self.num) )
+            self.requeue.put( DownloadHashtagsFromCategory(HashTag , self.num))
+
             if self.requeue.qsize() >= 100 :
+                #鎖定資源 不讓其他執行緒跑
                 if self.lock.acquire():
                     print("Lock Thead and output json")
                     while self.requeue.qsize() > 0:
                         self.data["HashTags"].append(self.requeue.get())
                     WriteHashTagsJson(self.data)
+                    self.data["HashTags"].clear()
+                    self.lock.release()
 
 #-----------------------------------------------MutiTheadDownloadByCategory---------------------------------------------------------------
 
@@ -202,6 +207,7 @@ def DownloadAllHashTags(RunTime):
     while HashTagQueue.qsize() > 0:
 
         # 建立兩個 Worker
+        #WorkerIncludeDownload 包含每抓完一百的HashTags,自動寫成JSON
         my_worker1 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 1)
         my_worker2 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 2)
 
@@ -212,20 +218,26 @@ def DownloadAllHashTags(RunTime):
         print("my_worker2 start")
         my_worker2.start()
         # 等待所有 Worker 結束
+        #生命週期60s
         my_worker1.join(60)
         my_worker2.join(60)
 
 
     print("Done." )
     i = 0
+    
     while ReQueue.qsize() > 0:
+
         data["HashTags"].append(ReQueue.get())
         i+=1
+        #100個HashTags後寫檔
         if i>= 100 :
             WriteHashTagsJson(data)
+            #清除list
             data["HashTags"].clear()
             i = 0
 
+    #最後少於100個時寫檔
     if ReQueue.qsize() <= 0 and data["HashTags"] :
         WriteHashTagsJson(data)
         data["HashTags"].clear()
