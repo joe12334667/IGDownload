@@ -15,6 +15,8 @@ def WriteAllHashTagsToMongoDB():
     FileName =  "HashTags.json"
 
     #抓出資料夾所有的檔案
+    if not os.path.isdir(os.getcwd()+"/HashTags" ):
+        os.mkdir("HashTags")
     files = listdir(os.getcwd() + "/"+ "HashTags")
     #pprint(files)
     dir =  "MongoDB_" + time.strftime("%Y-%m-%d_%H-%M") + category
@@ -52,8 +54,8 @@ def WriteAllHashTagsToMongoDB():
         file =open(os.getcwd() +  "/" + FileName , mode = 'w' , encoding="utf-8")
         print("檔案存在。")
     else:
-        if not os.path.isdir(os.getcwd() ):
-            os.mkdir(category)
+        if not os.path.isdir(os.getcwd() + "/HashTags" ):
+            os.mkdir("HashTags")
         file = open(os.getcwd() +"/" + FileName , mode = 'w' , encoding="utf-8")
         print("檔案不存在，已創立" + FileName  )
 

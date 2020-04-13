@@ -8,6 +8,10 @@ import csv
 import re
 import json
 from instaloader import Instaloader, Profile
+import requests
+from lxml.html import fromstring
+from itertools import cycle
+import traceback
 
 
 #--------------------------------DownloadHashtagsFromCategory----------------------------------------------------------
@@ -203,25 +207,27 @@ def DownloadAllHashTags(RunTime):
             HashTagQueue.put(item)
         
             
- 
-    while HashTagQueue.qsize() > 0:
+    i = 0
+    try :
+        while HashTagQueue.qsize() > 0:
 
-        # 建立兩個 Worker
-        #WorkerIncludeDownload 包含每抓完一百的HashTags,自動寫成JSON
-        my_worker1 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 1)
-        my_worker2 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 2)
+            # 建立兩個 Worker
+            #WorkerIncludeDownload 包含每抓完一百的HashTags,自動寫成JSON
+            my_worker1 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 1)
+            my_worker2 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 2)
 
-        # 讓 Worker 開始處理資料
-        print("my_worker1 start")
-        my_worker1.start()
-        time.sleep(3)
-        print("my_worker2 start")
-        my_worker2.start()
-        # 等待所有 Worker 結束
-        #生命週期60s
-        my_worker1.join(60)
-        my_worker2.join(60)
-
+            # 讓 Worker 開始處理資料
+            print("my_worker1 start")
+            my_worker1.start()
+            time.sleep(3)
+            print("my_worker2 start")
+            my_worker2.start()
+            # 等待所有 Worker 結束
+            #生命週期60s
+            my_worker1.join(60)
+            my_worker2.join(60)
+    except:
+        switch_proxy()
 
     print("Done." )
     i = 0
@@ -265,3 +271,42 @@ def WriteHashTagsJson(data):
     # 寫入json檔並調整格式
     file.write(json.dumps(data,ensure_ascii=False , indent=4, separators=(',', ': ')))
     file.close()
+
+def switch_proxy():
+        
+        proxy = get_proxies()
+        # proxy = 'host:port'
+        os.environ['https_proxy'] = proxy
+
+def get_proxies():
+    while True:
+        url = 'https://free-proxy-list.net/'
+        response = requests.get(url)
+        parser = fromstring(response.text)
+
+        proxies = set()
+        for i in parser.xpath('//tbody/tr')[:10]:
+            if i.xpath('.//td[7][contains(text(),"yes")]'):
+                #Grabbing IP and corresponding PORT
+                proxy = ":".join([i.xpath('.//td[1]/text()')[0], i.xpath('.//td[2]/text()')[0]])
+                proxies.add(proxy)
+
+        url = 'https://httpbin.org/ip'
+        print(proxies)
+        proxy_pool = cycle(proxies)
+        for i in range(1,10):
+            #Get a proxy from the pool
+            proxy = next(proxy_pool)
+            print("Request #%d"%i)
+            print(proxy)
+            try:
+                response = requests.get(url,proxies={"http": proxy, "https": proxy},timeout = 10)
+                print(response.json())
+                print("break")
+                return proxy
+
+
+            except:
+                #Most free proxies will often get connection errors. You will have retry the entire request using another proxy to work. 
+                #We will just skip retries as its beyond the scope of this tutorial and we are only downloading a single url 
+                print("Skipping. Connnection error")

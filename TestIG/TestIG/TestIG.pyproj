@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>71fa60f0-409d-4253-a212-c6ad31e56bc0</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>addHashTagsToList.py</StartupFile>
+    <StartupFile>AutoDownloadHashtag.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

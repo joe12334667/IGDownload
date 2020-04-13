@@ -1,3 +1,4 @@
+
 import pymongo
 import json
 import os
@@ -67,11 +68,11 @@ def WriteAllHashTagsToMongoDB():
         json_array = json.load(file)
 
         for items in json_array[category]:
-            print(items["hashtags"] , end =" , ")
+            #print(items["hashtags"] , end =" , ")
             #pprint(items["AllHashTags"])
             #寫入資料庫
             post_id = collect.insert_one(items).inserted_id
-            print(post_id)
+            #print(post_id)
 
         file.close()
         if not os.path.isdir(os.getcwd() + "/"+ category + "/" + dir):
@@ -84,7 +85,7 @@ def WriteAllHashTagsToMongoDB():
 #category = ["食" , "衣" , "住" , "行" ]
 #for cate in category:
 #    WriteCategoryHashTagsToMongoDB(cate)
-#WriteAllHashTagsToMongoDB()
+WriteAllHashTagsToMongoDB()
 
 
 
