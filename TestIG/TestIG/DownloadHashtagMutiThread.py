@@ -208,6 +208,7 @@ def DownloadAllHashTags(RunTime):
         
             
     i = 0
+    time_start = time.time()
     try :
         while HashTagQueue.qsize() > 0:
 
@@ -219,13 +220,23 @@ def DownloadAllHashTags(RunTime):
             # 讓 Worker 開始處理資料
             print("my_worker1 start")
             my_worker1.start()
-            time.sleep(3)
-            print("my_worker2 start")
-            my_worker2.start()
+            #time.sleep(3)
+            #print("my_worker2 start")
+            #my_worker2.start()
             # 等待所有 Worker 結束
             #生命週期60s
             my_worker1.join(60)
-            my_worker2.join(60)
+            #my_worker2.join(60)
+            print("i = " ,i)
+            if  i >= 30 :
+                print("-" * 30 )
+                print("wait for 30 mins")
+                print("-" * 30 )
+                time.sleep(1800)
+                i = 0
+            else : 
+                i += 1
+
     except:
         switch_proxy()
 

@@ -41,6 +41,9 @@
     <Compile Include="AutoDownloadHashtag.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="module2.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="TestIG.py" />
     <Compile Include="testJson.py">
       <SubType>Code</SubType>
