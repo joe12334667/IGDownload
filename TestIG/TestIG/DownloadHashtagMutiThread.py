@@ -46,7 +46,7 @@ def DownloadHashtagsFromCategory(HashTags , RunTime):
     #轉set以實現不重複陣列
     AllHashTags = set(AllHashTags)
 
-    data = {"hashtags" : HashTag , "AllHashTags" : list(AllHashTags) , "Time" : time.strftime("%Y-%m-%d_%H-%M-$S")}
+    data = {"HashTag" : HashTag , "AllHashTags" : list(AllHashTags) , "Time" : time.strftime("%Y-%m-%d_%H-%M-$S")}
     return data
 #--------------------------------DownloadHashtagsFromCategory----------------------------------------------------------
 #--------------------------------is_contains_chinese----------------------------------------------------------
@@ -197,6 +197,8 @@ def DownloadAllHashTags(RunTime):
     ReQueue = queue.Queue(0)
     data = {"HashTags" : []}
     fileName = "HashTags.json"
+    HashTags = list()
+    HashTags_done = list()
 
     # 將資料放入佇列 
     with open(os.getcwd() + "/" + fileName , mode = 'r' , encoding="utf-8") as file:
@@ -204,18 +206,50 @@ def DownloadAllHashTags(RunTime):
         json_array = json.load(file)
 
         for item in json_array["HashTags"]:
-            HashTagQueue.put(item)
-        
+            HashTags.append(item)
             
+    with open(os.getcwd() + "/" + "HashTags_done.json" , mode = 'r' , encoding="utf-8") as file:
+
+        json_array = json.load(file)
+
+        for item in json_array["HashTags"]:
+            HashTags_done.append(item)
+            
+    if not list(set(HashTags) - set(HashTags_done)) :
+        for item in HashTags:
+            HashTagQueue.put(item)
+            print("HashTags_done is emply")
+            file =open(os.getcwd() +  "/" + "HashTags_done.json" , mode = 'w' , encoding="utf-8")
+            # 寫入json檔並調整格式
+            file.write(json.dumps( {"HashTags" : list()} ,ensure_ascii=False , indent=4, separators=(',', ': ')))
+            file.close()
+
+    else:
+        print("HashTags - HashTags_done")
+        items = list(set(HashTags) - set(HashTags_done))
+        for item in sorted( items) :
+            HashTagQueue.put(item)
+            
+
     i = 0
     time_start = time.time()
     try :
         while HashTagQueue.qsize() > 0:
+            
+            if  i >= 10 :
+                print("-" * 30 )
+                print("wait for 30 mins")
+                print("-" * 30 )
+                time.sleep(1800)
+                i = 1
+            else : 
+                i += 1
+            print("i = " ,i)
 
             # 建立兩個 Worker
             #WorkerIncludeDownload 包含每抓完一百的HashTags,自動寫成JSON
             my_worker1 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 1)
-            my_worker2 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 2)
+            #my_worker2 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 2)
 
             # 讓 Worker 開始處理資料
             print("my_worker1 start")
@@ -227,15 +261,6 @@ def DownloadAllHashTags(RunTime):
             #生命週期60s
             my_worker1.join(60)
             #my_worker2.join(60)
-            print("i = " ,i)
-            if  i >= 30 :
-                print("-" * 30 )
-                print("wait for 30 mins")
-                print("-" * 30 )
-                time.sleep(1800)
-                i = 0
-            else : 
-                i += 1
 
     except:
         switch_proxy()
@@ -282,6 +307,39 @@ def WriteHashTagsJson(data):
     # 寫入json檔並調整格式
     file.write(json.dumps(data,ensure_ascii=False , indent=4, separators=(',', ': ')))
     file.close()
+
+    FileName =  "HashTags_done.json"
+    HashTags_done = list()
+    #寫 HashTags_done.json
+    # 資料夾與檔案是否存在
+    if os.path.isfile(os.getcwd() +  "/" + FileName):
+            file =open(os.getcwd() +  "/" + FileName , mode = 'r' , encoding="utf-8")
+            print("檔案存在。")
+
+    else:
+        file = open(os.getcwd() +"/" + FileName , mode = 'r' , encoding="utf-8")
+        print("檔案不存在，已創立" + FileName  )
+
+
+
+    
+    json_array = json.load(file)
+
+    for items in json_array["HashTags"]:
+        for item in items :
+            HashTags_done.append(item)
+
+    file.close()
+    
+    file =open(os.getcwd() +  "/" + FileName , mode = 'w' , encoding="utf-8")
+
+    for HashTags in  data["HashTags"]:
+        HashTags_done.append(HashTags["HashTag"])
+    # 寫入json檔並調整格式
+    file.write(json.dumps( {"HashTags" : list(HashTags_done)} ,ensure_ascii=False , indent=4, separators=(',', ': ')))
+    file.close()
+
+
 
 def switch_proxy():
         

@@ -5,7 +5,7 @@ import pprint
 
 
 runtime = 0
-category = ["食" , "衣" , "住" , "行" ]
+#category = ["食" , "衣" , "住" , "行" ]
 finaltimes = {}
 while True :
     runtime +=1
@@ -24,4 +24,4 @@ while True :
     pprint.pprint(finaltimes)
     
     #testMongoDB.WriteAllHashTagsToMongoDB()
-    time.sleep(3600)
+    #time.sleep(3600)
