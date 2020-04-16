@@ -314,7 +314,7 @@ def WriteHashTagsJson(data):
     # 資料夾與檔案是否存在
     if os.path.isfile(os.getcwd() +  "/" + FileName):
             file =open(os.getcwd() +  "/" + FileName , mode = 'r' , encoding="utf-8")
-            print("檔案存在。")
+            print("檔案存在。" , FileName)
 
     else:
         file = open(os.getcwd() +"/" + FileName , mode = 'r' , encoding="utf-8")
@@ -326,8 +326,7 @@ def WriteHashTagsJson(data):
     json_array = json.load(file)
 
     for items in json_array["HashTags"]:
-        for item in items :
-            HashTags_done.append(item)
+        HashTags_done.append(items[1:])
 
     file.close()
     
