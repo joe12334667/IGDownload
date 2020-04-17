@@ -326,14 +326,14 @@ def WriteHashTagsJson(data):
     json_array = json.load(file)
 
     for items in json_array["HashTags"]:
-        HashTags_done.append(items[1:])
+        HashTags_done.append(items)
 
     file.close()
     
     file =open(os.getcwd() +  "/" + FileName , mode = 'w' , encoding="utf-8")
 
     for HashTags in  data["HashTags"]:
-        HashTags_done.append(HashTags["HashTag"])
+        HashTags_done.append(HashTags["HashTag"][1:])
     # 寫入json檔並調整格式
     file.write(json.dumps( {"HashTags" : list(HashTags_done)} ,ensure_ascii=False , indent=4, separators=(',', ': ')))
     file.close()
