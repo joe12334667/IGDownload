@@ -573,3 +573,4 @@ TestIG/TestIG/env/Lib/site-packages/urllib3/util/__pycache__/timeout.cpython-37.
 TestIG/TestIG/env/Lib/site-packages/urllib3/util/__pycache__/url.cpython-37.pyc
 TestIG/TestIG/env/Lib/site-packages/urllib3/util/__pycache__/wait.cpython-37.pyc
 TestIG/TestIG/HashTags_done.json
+*.json
