@@ -13,12 +13,9 @@ while True :
     #for cate in category:
     #    DownloadHashtagMutiThread.MutiTheadDownloadByCategory(cate ,100)
     #    print(cate , " finish")
-    try :    
-        DownloadHashtagMutiThread.DownloadAllHashTags(100)
-    except:
-        print("-"*30)
-        print("except")
-        print("-"*30)
+
+    DownloadHashtagMutiThread.DownloadAllHashTags(100)
+
     #tend = time.time()
     #finaltime = tend - tstart
     #finaltimes[runtime] = finaltime

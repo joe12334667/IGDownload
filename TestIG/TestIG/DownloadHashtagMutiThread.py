@@ -43,7 +43,7 @@ def DownloadHashtagsFromCategory(HashTags , RunTime):
             #統計多少篇
             if countRunTime == RunTime :
                 break
-    except e:
+    except Exception as e:
         print("except:" , e)
     #轉set以實現不重複陣列
     AllHashTags = set(AllHashTags)
