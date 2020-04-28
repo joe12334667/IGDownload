@@ -19,7 +19,7 @@ def DownloadHashtagsFromCategory(HashTags , RunTime):
     HashTag = "#"+ HashTags
     lock = threading.Lock() 
     # Get instance
-    L = Instaloader(quiet=True, compress_json=False , max_connection_attempts = 0)
+    L = Instaloader(quiet=True, compress_json=False , max_connection_attempts = 10)
 
     AllHashTags = list()
     
@@ -27,22 +27,24 @@ def DownloadHashtagsFromCategory(HashTags , RunTime):
     lock.acquire() 
     posts = L.get_hashtag_posts(HashTags)
     lock.release()
-    for post in posts :
+    try:
+        for post in posts :
 
-        #沒有hashtags
-        #因為當字符串或集合為空時，其值被隱式地賦為False。
-        if not post.caption_hashtags :
-                continue
+            #沒有hashtags
+            #因為當字符串或集合為空時，其值被隱式地賦為False。
+            if not post.caption_hashtags :
+                    continue
 
-        countRunTime +=1
-        #確認是否新增進HashTags
-        for item in post.caption_hashtags:
-            if is_all_chinese_And_English(item):
-                AllHashTags.append(item)
-        #統計多少篇
-        if countRunTime == RunTime :
-            break
-
+            countRunTime +=1
+            #確認是否新增進HashTags
+            for item in post.caption_hashtags:
+                if is_all_chinese_And_English(item):
+                    AllHashTags.append(item)
+            #統計多少篇
+            if countRunTime == RunTime :
+                break
+    except e:
+        print("except:" , e)
     #轉set以實現不重複陣列
     AllHashTags = set(AllHashTags)
 

@@ -50,7 +50,7 @@ def WriteAllHashTagsToMongoDB():
     #連接資料庫
     myclient = pymongo.MongoClient(host='localhost', port=27017)
     #DataBase
-    db = myclient["Hashtags"]
+    db = myclient["HashTags"]
     #collection = sheet
     collect = db["AllHashTags"]
     
