@@ -45,7 +45,8 @@ def WriteCategoryHashTagsToMongoDB(category):
 #---------------------------------------WriteAllHashTagsToMongoDB------------------------------------------------------
 def WriteAllHashTagsToMongoDB():
 
-
+    print("insert DB")
+    print("Please wait")
     category = "HashTags"
     #連接資料庫
     myclient = pymongo.MongoClient(host='localhost', port=27017)
