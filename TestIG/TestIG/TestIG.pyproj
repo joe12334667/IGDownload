@@ -51,6 +51,9 @@
     <Compile Include="testMongoDB.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="tryExcept.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />
