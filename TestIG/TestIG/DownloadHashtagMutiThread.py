@@ -48,7 +48,7 @@ def DownloadHashtagsFromCategory(HashTags , RunTime):
     #轉set以實現不重複陣列
     AllHashTags = set(AllHashTags)
 
-    data = {"HashTag" : HashTag , "AllHashTags" : list(AllHashTags) , "Time" : time.strftime("%Y-%m-%d_%H-%M-$S")}
+    data = {"HashTag" : HashTag , "AllHashTags" : list(AllHashTags) , "Time" : time.strftime("%Y-%m-%d_%H-%M-%S")}
     return data
 #--------------------------------DownloadHashtagsFromCategory----------------------------------------------------------
 #--------------------------------is_contains_chinese----------------------------------------------------------
