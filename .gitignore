@@ -62,7 +62,7 @@ bld/
 *.pidb
 *.svclog
 *.scc
-
+env/
 *食.json
 *衣.json
 *住.json
