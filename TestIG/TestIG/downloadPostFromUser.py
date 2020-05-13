@@ -68,20 +68,21 @@ for post in profile.get_posts():
 
             post_no = data[0]
             print("post_no :" ,post_no)
-            #print("新增 like record")
-            #print("person who like this post :")
-            #for likes_profile in post.get_likes():
-            #    print( likes_profile.username ,end = " , ")
 
-            #    #確認有沒有新增過
-            #    sql = "SELECT post_no FROM instabuilder.like where post_no = %s and like_account = %s;"
-            #    cursor.execute(sql, (post_no , likes_profile.username))
-            #    like_data = cursor.fetchall()
-            #    if( not like_data):
-            #        #資料庫無此like
-            #        sql = "insert into instabuilder.like ( post_no, like_account , like_time) value ( %s , %s , %s);"
-            #        cursor.execute(sql, (post_no ,likes_profile.username , datetime.datetime.now() ))
-            #        connection.commit()
+            print("新增 like record")
+            print("person who like this post :")
+            for likes_profile in post.get_likes():
+                print( likes_profile.username ,end = " , ")
+
+                #確認有沒有新增過
+                sql = "SELECT post_no FROM instabuilder.like where post_no = %s and like_account = %s;"
+                cursor.execute(sql, (post_no , likes_profile.username))
+                like_data = cursor.fetchall()
+                if( not like_data):
+                    #資料庫無此like
+                    sql = "insert into instabuilder.like ( post_no, like_account , like_time) value ( %s , %s , %s);"
+                    cursor.execute(sql, (post_no ,likes_profile.username , datetime.datetime.now() ))
+                    connection.commit()
                         
 
             print("新增 comment record")
@@ -132,7 +133,7 @@ for post in profile.get_posts():
                     connection.commit()
     finally:
         #connection.close()
-        print("except")
+        print("finally")
 
 
 
