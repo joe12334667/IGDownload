@@ -7,7 +7,7 @@ import datetime
 
 def downloadPostFromUser(post_user , time):
 
-    connection = pymysql.connect("140.131.115.97","root","12334667","instabuilder" ,  charset='utf8mb4' )
+    connection = pymysql.connect("ip","id","password","DATABASE" ,  charset='utf8mb4' )
     i = 0
     l = Instaloader(quiet=True, compress_json=False , max_connection_attempts = 10)
     profile = Profile.from_username(l.context , post_user)
@@ -200,7 +200,7 @@ def downloadPostFromUser(post_user , time):
 
 
 
-
+downloadPostFromUser("emkar_2124" , 10)
 
 
 
