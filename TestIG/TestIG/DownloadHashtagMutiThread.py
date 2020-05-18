@@ -251,18 +251,18 @@ def DownloadAllHashTags(RunTime):
             # 建立兩個 Worker
             #WorkerIncludeDownload 包含每抓完一百的HashTags,自動寫成JSON
             my_worker1 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 1)
-            #my_worker2 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 2)
+            my_worker2 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 2)
 
             # 讓 Worker 開始處理資料
             print("my_worker1 start")
             my_worker1.start()
-            #time.sleep(3)
-            #print("my_worker2 start")
-            #my_worker2.start()
+            time.sleep(3)
+            print("my_worker2 start")
+            my_worker2.start()
             # 等待所有 Worker 結束
             #生命週期60s
             my_worker1.join(60)
-            #my_worker2.join(60)
+            my_worker2.join(60)
 
     except:
         switch_proxy()
@@ -380,3 +380,6 @@ def get_proxies():
                 #Most free proxies will often get connection errors. You will have retry the entire request using another proxy to work. 
                 #We will just skip retries as its beyond the scope of this tutorial and we are only downloading a single url 
                 print("Skipping. Connnection error")
+
+
+DownloadAllHashTags(100)

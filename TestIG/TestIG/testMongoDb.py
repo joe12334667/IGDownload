@@ -86,7 +86,7 @@ def WriteAllHashTagsToMongoDB():
 #category = ["食" , "衣" , "住" , "行" ]
 #for cate in category:
 #    WriteCategoryHashTagsToMongoDB(cate)
-#WriteAllHashTagsToMongoDB()
+WriteAllHashTagsToMongoDB()
 
 
 
