@@ -7,11 +7,13 @@ import datetime
 
 def downloadPostFromUser(post_user , time):
 
-    connection = pymysql.connect("ip","id","password","DATABASE" ,  charset='utf8mb4' )
+    connection = pymysql.connect("140.131.114.143","root","superman12334667","instabuilder" ,  charset='utf8mb4' )
     i = 0
     l = Instaloader(quiet=True, compress_json=False , max_connection_attempts = 10)
+    #l.login("joe_try_something"  , "joejoe12334667")   
     profile = Profile.from_username(l.context , post_user)
-    for post in profile.get_posts():
+    posts = profile.get_posts()
+    for post in posts :
         i+=1
         if i> time : break
         #print("mediaid :" , post.mediaid)
@@ -38,7 +40,7 @@ def downloadPostFromUser(post_user , time):
                 #為空值，找不到這筆POST紀錄
                 if(not  cursor.fetchall()):
                     #會員有沒有這帳號
-                    sql = "SELECT account_id FROM instabuilder.instaAccount where account_name = %s;"                
+                    sql = "SELECT account_id FROM instabuilder.instaaccount where account_name = %s;"                
                     cursor.execute(sql , (post_user))
                     connection.commit()
                     data = cursor.fetchall()
@@ -48,7 +50,7 @@ def downloadPostFromUser(post_user , time):
                     else:
                         is_member = False
                         #沒有帳號 搜尋非會員帳號表有沒有
-                        sql = "SELECT nAccount_id FROM instabuilder.nonMemberInstaAcc where nAccount_name = %s ;"                
+                        sql = "SELECT nAccount_id FROM instabuilder.nonmemberinstaacc where nAccount_name = %s ;"                
                         cursor.execute(sql , (post_user))
                         connection.commit()
                         data = cursor.fetchall()
@@ -56,7 +58,7 @@ def downloadPostFromUser(post_user , time):
                             account_id = data[0]
                         else:
                             #新增至非會員帳號表 並取得id
-                            sql = "insert into nonMemberInstaAcc (nAccount_name)value ( %s);"
+                            sql = "insert into nonmemberinstaacc (nAccount_name)value ( %s);"
                             cursor.execute(sql , (post_user))
                             connection.commit()
                             #得到新增的nAccount_id
@@ -68,7 +70,7 @@ def downloadPostFromUser(post_user , time):
                        
                 
                     print("新增一筆POST")
-                    sql = "insert into post (insta_post_id, content , announcer_no , announce_time ) value (%s , %s , %s , %s)"
+                    sql = "insert into post (insta_post_id, content , announcer_id , announce_time ) value (%s , %s , %s , %s)"
                     cursor.execute(sql, (insta_post_id , post.caption , 3 , datetime.datetime.now() ))
                     connection.commit()
 
@@ -87,7 +89,7 @@ def downloadPostFromUser(post_user , time):
                 else:
                     #已有這篇POST
                     #搜尋會員/非會員帳號表確認account_id
-                    sql = "SELECT account_id FROM instabuilder.instaAccount where account_name = %s;"                
+                    sql = "SELECT account_id FROM instabuilder.instaaccount where account_name = %s;"                
                     cursor.execute(sql , (post_user))
                     connection.commit()
                     data = cursor.fetchall()
@@ -96,7 +98,7 @@ def downloadPostFromUser(post_user , time):
                         is_member = True
                     else:
                         is_member = False
-                        sql = "SELECT nAccount_id FROM instabuilder.nonMemberInstaAcc where nAccount_name = %s;"     
+                        sql = "SELECT nAccount_id FROM instabuilder.nonmemberinstaacc where nAccount_name = %s;"     
                         cursor.execute(sql , (post_user))
                         connection.commit()
                         data = cursor.fetchall()
@@ -120,7 +122,7 @@ def downloadPostFromUser(post_user , time):
                     cursor.execute(sql , (account_id , post_no))
                     connection.commit()
                 else:
-                    sql = "insert into nonMemberPost (nAccount_id , post_no) value (%s , %s);"
+                    sql = "insert into nonmemberpost (nAccount_id , post_no) value (%s , %s);"
                     cursor.execute(sql , (account_id , post_no))
                     connection.commit()
 
@@ -129,7 +131,7 @@ def downloadPostFromUser(post_user , time):
                 print("新增 like record")
                 print("person who like this post :")
                 for likes_profile in post.get_likes():
-                    print( likes_profile.username ,end = " , ")
+                    #print( likes_profile.username ,end = " , ")
 
                     #確認有沒有新增過
                     sql = "SELECT post_no FROM instabuilder.like where post_no = %s and like_account = %s;"
@@ -145,7 +147,7 @@ def downloadPostFromUser(post_user , time):
                 print("新增 comment record")
                 print("person who comment this post :" )
                 for comment in post.get_comments():
-                    print( comment.owner.username  , "comment text : ", comment.text , end = " , ")
+                    #print( comment.owner.username  , "comment text : ", comment.text , end = " , ")
                         
                     #確認有沒有新增過
                     sql = "SELECT post_no FROM instabuilder.comment where post_no = %s and comment_account = %s;"
@@ -164,17 +166,17 @@ def downloadPostFromUser(post_user , time):
                     print(hashtag , end = " , ")
                         
                     #確認有沒有新增過在hashtagCates
-                    sql = "SELECT hashtag_no FROM instabuilder.hashtagCates where hashtag = %s ;"
+                    sql = "SELECT hashtag_no FROM instabuilder.hashtagcates where hashtag = %s ;"
                     cursor.execute(sql, (hashtag))
                     hashtag_data = cursor.fetchall()
                     if( not hashtag_data):
                         #資料庫無此HASHTAG
-                        sql = "insert into hashtagCates (hashtag , stage ) value (%s , %s);"
+                        sql = "insert into hashtagcates (hashtag , stage ) value (%s , %s);"
                         cursor.execute(sql, (hashtag , 0))
                         connection.commit()
 
                     #獲取hashtag_no 來 insert to hashpost
-                    sql = "SELECT hashtag_no FROM instabuilder.hashtagCates where hashtag = %s ;"
+                    sql = "SELECT hashtag_no FROM instabuilder.hashtagcates where hashtag = %s ;"
                     cursor.execute(sql, (hashtag))
                     hashtag_data = cursor.fetchall()
                     hashtag_no = hashtag_data[0]
@@ -200,7 +202,7 @@ def downloadPostFromUser(post_user , time):
 
 
 
-downloadPostFromUser("emkar_2124" , 10)
+downloadPostFromUser("13_23_33_" , 10)
 
 
 
