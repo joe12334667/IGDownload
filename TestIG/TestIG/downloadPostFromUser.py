@@ -6,8 +6,9 @@ import datetime
 from datetime import timedelta  
 
 def downloadPostFromUser(post_user , time):
-
+    print("connect...")
     connection = pymysql.connect("140.131.114.143","root","superman12334667","instabuilder" ,  charset='utf8mb4' )
+    print("connect success")
     i = 0
     l = Instaloader(quiet=True, compress_json=False , max_connection_attempts = 10)
     #l.login("joe_try_something"  , "joejoe12334667")   
@@ -72,7 +73,7 @@ def downloadPostFromUser(post_user , time):
                 
                     print("新增一筆POST")
                     sql = "insert into post (insta_post_id, content , announcer_id , announce_time ) value (%s , %s , %s , %s)"
-                    cursor.execute(sql, (insta_post_id , post.caption , 3 , datetime.datetime.now() ))
+                    cursor.execute(sql, (insta_post_id , post.caption , 3 ,  post.date_local ))
                     connection.commit()
 
                     sql = "SELECT post_no FROM instabuilder.post where insta_post_id = %s;"
@@ -216,7 +217,7 @@ def downloadPostFromUser(post_user , time):
 
 
 
-downloadPostFromUser("emkar_2124" , 220)
+downloadPostFromUser("13_23_33_" , 10)
 
 
 
