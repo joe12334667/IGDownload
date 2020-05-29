@@ -17,6 +17,7 @@ def downloadPostFromUser(post_user , time):
     for post in posts :
         i+=1
         if i> time : break
+        print("time :" , i)
         #print("mediaid :" , post.mediaid)
         #print("caption :" , post.caption)
         #print("likes :" , post.likes )
@@ -90,18 +91,21 @@ def downloadPostFromUser(post_user , time):
                         print("成功新增 insta_post_id :" , insta_post_id)
                 else:
 
-                    update_day = datetime.datetime.today() - update_time[0]
-                    if(update_day.days <= 1):
-                        print(i ," 一天內更新過 insta_post_id = " ,insta_post_id,"，跳至下一篇" )
-                        continue
-                    else:
-                        #更新 post / update_time 
+                    
+                    if(update_time[0] != None):
+                        update_day = datetime.datetime.today() - update_time[0]
+                        if(update_day.days <= 1):
+                            print(i ," 一天內更新過 insta_post_id = " ,insta_post_id,"，跳至下一篇" )
+                            continue
+                    
+                    #更新 post / update_time 
 
-                        sql = "SET SQL_SAFE_UPDATES = 0;" 
-                        sql = sql + "update post set update_time = now() where insta_post_id = %s;"
+                    sql = "SET SQL_SAFE_UPDATES = 0;" 
+                    cursor.execute(sql )
+                    sql = "update post set update_time = now() where insta_post_id = %s;"
 
-                        cursor.execute(sql , (insta_post_id))
-                        connection.commit()
+                    cursor.execute(sql , (insta_post_id))
+                    connection.commit()
 
                     #已有這篇POST
                     #搜尋會員/非會員帳號表確認account_id
@@ -226,7 +230,7 @@ def downloadPostFromUser(post_user , time):
 
 
 
-downloadPostFromUser("joe12334667" , 50)
+downloadPostFromUser('13_23_33_' , 50)
 
 
 
