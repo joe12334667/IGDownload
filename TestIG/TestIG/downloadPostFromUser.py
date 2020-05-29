@@ -6,7 +6,7 @@ import datetime
 from datetime import timedelta  
 
 def downloadPostFromUser(post_user , time):
-    print("connect...")
+    print("connect...") 
     connection = pymysql.connect("140.131.114.143","root","superman12334667","instabuilder" ,  charset='utf8mb4' )
     print("connect success")
     i = 0
@@ -35,12 +35,12 @@ def downloadPostFromUser(post_user , time):
 
             with connection.cursor() as cursor:
                 #POST資料表有沒有這筆資料
-                sql = "SELECT announce_time FROM instabuilder.post where insta_post_id = %s"
+                sql = "SELECT update_time FROM instabuilder.post where insta_post_id = %s"
                 cursor.execute(sql , (insta_post_id))
                 connection.commit()
-                announce_time = cursor.fetchone()
+                update_time = cursor.fetchone()
                 #為空值，找不到這筆POST紀錄
-                if(not  announce_time):
+                if(not  update_time):
                     #會員有沒有這帳號
                     sql = "SELECT account_id FROM instabuilder.instaaccount where account_name = %s;"                
                     cursor.execute(sql , (post_user))
@@ -72,7 +72,7 @@ def downloadPostFromUser(post_user , time):
                        
                 
                     print("新增一筆POST")
-                    sql = "insert into post (insta_post_id, content , announcer_id , announce_time ) value (%s , %s , %s , %s)"
+                    sql = "insert into post (insta_post_id, content , announcer_id , announce_time ,update_time) value (%s , %s , %s , %s , now())"
                     cursor.execute(sql, (insta_post_id , post.caption , 3 ,  post.date_local ))
                     connection.commit()
 
@@ -90,10 +90,19 @@ def downloadPostFromUser(post_user , time):
                         print("成功新增 insta_post_id :" , insta_post_id)
                 else:
 
-                    update_day = datetime.datetime.today() - announce_time[0]
+                    update_day = datetime.datetime.today() - update_time[0]
                     if(update_day.days <= 1):
                         print(i ," 一天內更新過 insta_post_id = " ,insta_post_id,"，跳至下一篇" )
                         continue
+                    else:
+                        #更新 post / update_time 
+
+                        sql = "SET SQL_SAFE_UPDATES = 0;" 
+                        sql = sql + "update post set update_time = now() where insta_post_id = %s;"
+
+                        cursor.execute(sql , (insta_post_id))
+                        connection.commit()
+
                     #已有這篇POST
                     #搜尋會員/非會員帳號表確認account_id
                     sql = "SELECT account_id FROM instabuilder.instaaccount where account_name = %s;"                
@@ -217,7 +226,7 @@ def downloadPostFromUser(post_user , time):
 
 
 
-downloadPostFromUser("13_23_33_" , 10)
+downloadPostFromUser("joe12334667" , 50)
 
 
 
