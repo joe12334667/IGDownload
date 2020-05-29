@@ -130,7 +130,6 @@ def downloadPostFromUser(post_user , time):
                 cursor.execute(sql , (insta_post_id))
             
                 data = cursor.fetchone()
-                print("data :" , data[0])
                 post_no = data[0]
                 print("post_no :" ,post_no)
 
@@ -138,13 +137,25 @@ def downloadPostFromUser(post_user , time):
                 #新增user_post or nonmemberPost
 
                 if(is_member):
-                    sql = "insert into instabuilder.userpost (account_id, post_no) value(%s , %s);"
+                    sql = 'SELECT * FROM instabuilder.userpost where account_id = %s and post_no = %s;'
                     cursor.execute(sql , (account_id , post_no))
                     connection.commit()
+                    
+                    if(not cursor.fetchone()[0]):
+                        print("新增進userpost")
+                        sql = "insert into instabuilder.userpost (account_id, post_no) value(%s , %s);"
+                        cursor.execute(sql , (account_id , post_no))
+                        connection.commit()
                 else:
-                    sql = "insert into nonmemberpost (nAccount_id , post_no) value (%s , %s);"
+                    sql = 'SELECT * FROM instabuilder.nonmemberpost where account_id = %s and post_no = %s;'
                     cursor.execute(sql , (account_id , post_no))
                     connection.commit()
+
+                    if(not cursor.fetchone()[0]):
+                        print("新增進nonmemberpost")
+                        sql = "insert into nonmemberpost (nAccount_id , post_no) value (%s , %s);"
+                        cursor.execute(sql , (account_id , post_no))
+                        connection.commit()
 
 
                 #新增 like record
@@ -230,7 +241,7 @@ def downloadPostFromUser(post_user , time):
 
 
 
-downloadPostFromUser('13_23_33_' , 50)
+downloadPostFromUser('joe12334667' , 20)
 
 
 
