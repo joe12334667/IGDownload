@@ -92,7 +92,7 @@ def downloadPostFromUser(post_user , time):
                 else:
 
                     
-                    if(update_time[0] != None):
+                    if( not update_time ):
                         update_day = datetime.datetime.today() - update_time[0]
                         if(update_day.days <= 1):
                             print(i ," 一天內更新過 insta_post_id = " ,insta_post_id,"，跳至下一篇" )
@@ -141,7 +141,7 @@ def downloadPostFromUser(post_user , time):
                     cursor.execute(sql , (account_id , post_no))
                     connection.commit()
                     
-                    if(not cursor.fetchone()[0]):
+                    if(not cursor.fetchone()):
                         print("新增進userpost")
                         sql = "insert into instabuilder.userpost (account_id, post_no) value(%s , %s);"
                         cursor.execute(sql , (account_id , post_no))
@@ -241,7 +241,7 @@ def downloadPostFromUser(post_user , time):
 
 
 
-downloadPostFromUser('joe12334667' , 20)
+downloadPostFromUser('emkar_2124' , 20)
 
 
 
