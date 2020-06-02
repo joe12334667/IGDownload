@@ -134,7 +134,7 @@ def downloadPostFromUser(post_user , time):
                 print("post_no :" ,post_no)
 
 
-                #新增user_post or nonmemberPost
+#---------------新增user_post or nonmemberPost-------------------------------------
 
                 if(is_member):
                     sql = 'SELECT * FROM instabuilder.userpost where account_id = %s and post_no = %s;'
@@ -158,31 +158,38 @@ def downloadPostFromUser(post_user , time):
                         connection.commit()
 
 
-                #新增 like record
+#---------------新增 like record----------------------------------------------------------------
                 print("新增 like record")
                 print("person who like this post :")
-                for likes_profile in post.get_likes():
+                post_liker = set()
+                for likes_profile in post.get_likes():  
                     print( likes_profile.username ,end = " , ")
+                    post_liker.add(likes_profile.username)
 
-                    #確認有沒有新增過
-                    sql = "SELECT post_no FROM instabuilder.like where post_no = %s and like_account = %s;"
-                    cursor.execute(sql, (post_no , likes_profile.username))
-                    like_data = cursor.fetchall()
-                    if( not like_data):
-                        #資料庫無此like
-                        sql = "insert into instabuilder.like ( post_no, like_account , like_time) value ( %s , %s , %s);"
-                        cursor.execute(sql, (post_no ,likes_profile.username , datetime.datetime.now() ))
+                    
+                #確認資料庫全部案讚的人
+                sql = "SELECT like_account FROM instabuilder.like where post_no = %s ;"
+                cursor.execute(sql, (post_no))
+                like_data = cursor.fetchall()
+                db_liker = set()
+                for person in like_data:
+                    db_liker.add(person[0])
+
+                #將兩個set相減，取出剩下未放入資料庫的人
+                for insert_liker in (post_liker - db_liker):
+                    sql = "insert into instabuilder.like ( post_no, like_account , like_time) value ( %s , %s , %s);"
+                    cursor.execute(sql, (post_no ,insert_liker , datetime.datetime.now() ))
                     connection.commit()
                         
-                #新增 comment record
-                print("新增 comment record")
+#---------------新增 comment record-----------------------------------------------------------
+                print("\n新增 comment record")
                 print("person who comment this post :" )
                 for comment in post.get_comments():
                     print( comment.owner.username  , "comment text : ", comment.text , end = " , ")
                         
                     #確認有沒有新增過
-                    sql = "SELECT post_no FROM instabuilder.comment where post_no = %s and comment_account = %s;"
-                    cursor.execute(sql, (post_no , comment.owner.username))
+                    sql = "SELECT post_no FROM instabuilder.comment where post_no = %s and comment_account = %s and content = %s;"
+                    cursor.execute(sql, (post_no , comment.owner.username , comment.text))
                     comment_data = cursor.fetchall()
                     if( not comment_data):
                         #資料庫無此comment
@@ -190,7 +197,7 @@ def downloadPostFromUser(post_user , time):
                         cursor.execute(sql, (post_no ,comment.owner.username , comment.text , comment.created_at_utc + datetime.timedelta(hours=8) ))
                         
                     connection.commit()
-                #新增hashtags
+#---------------新增hashtags-----------------------------------------------------------------
                 print("新增hashtags")
                 print("hashtag which in caption without # ")
                 for hashtag in post.caption_hashtags:
@@ -241,7 +248,7 @@ def downloadPostFromUser(post_user , time):
 
 
 
-downloadPostFromUser('emkar_2124' , 20)
+downloadPostFromUser('yun_cyjack' , 20)
 
 
 
