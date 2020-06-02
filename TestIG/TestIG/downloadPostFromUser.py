@@ -4,6 +4,7 @@ import pymysql.cursors
 import time
 import datetime
 from datetime import timedelta  
+from pprint import pprint
 
 def downloadPostFromUser(post_user , time):
     print("connect...") 
@@ -37,9 +38,9 @@ def downloadPostFromUser(post_user , time):
             with connection.cursor() as cursor:
                 #POST資料表有沒有這筆資料
                 sql = "SELECT update_time FROM instabuilder.post where insta_post_id = %s"
-                cursor.execute(sql , (insta_post_id))
+                cursor.execute(sql , insta_post_id)
                 connection.commit()
-                update_time = cursor.fetchone()
+                update_time = cursor.fetchall()
                 #為空值，找不到這筆POST紀錄
                 if(not  update_time):
                     #會員有沒有這帳號
@@ -90,13 +91,14 @@ def downloadPostFromUser(post_user , time):
 
                         print("成功新增 insta_post_id :" , insta_post_id)
                 else:
-
-                    
-                    if( not update_time ):
+                    pprint(update_time)
+                    if(not update_time ):
                         update_day = datetime.datetime.today() - update_time[0]
                         if(update_day.days <= 1):
                             print(i ," 一天內更新過 insta_post_id = " ,insta_post_id,"，跳至下一篇" )
                             continue
+                    else:
+                        print("更新貼文")
                     
                     #更新 post / update_time 
 
@@ -195,8 +197,19 @@ def downloadPostFromUser(post_user , time):
                         #資料庫無此comment
                         sql = "insert into comment (post_no, comment_account, content ,  comment_time) value (%s , %s , %s , %s)"
                         cursor.execute(sql, (post_no ,comment.owner.username , comment.text , comment.created_at_utc + datetime.timedelta(hours=8) ))
-                        
-                    connection.commit()
+                        connection.commit()
+                    
+                    for ans in comment.answers:
+                        sql = "SELECT post_no FROM instabuilder.comment where post_no = %s and comment_account = %s and content = %s;"
+                        cursor.execute(sql, (post_no , ans.owner.username , ans.text))
+                        comment_data = cursor.fetchall()
+                        if( not comment_data):
+                            #資料庫無此comment
+                            sql = "insert into comment (post_no, comment_account, content ,  comment_time) value (%s , %s , %s , %s)"
+                            cursor.execute(sql, (post_no ,ans.owner.username , ans.text , ans.created_at_utc + datetime.timedelta(hours=8) ))
+                            connection.commit()
+                    
+
 #---------------新增hashtags-----------------------------------------------------------------
                 print("新增hashtags")
                 print("hashtag which in caption without # ")
