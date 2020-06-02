@@ -40,7 +40,8 @@ def downloadPostFromUser(post_user , time):
                 sql = "SELECT update_time FROM instabuilder.post where insta_post_id = %s"
                 cursor.execute(sql , insta_post_id)
                 connection.commit()
-                update_time = cursor.fetchall()
+                update_time = cursor.fetchone()
+                
                 #為空值，找不到這筆POST紀錄
                 if(not  update_time):
                     #會員有沒有這帳號
@@ -91,15 +92,18 @@ def downloadPostFromUser(post_user , time):
 
                         print("成功新增 insta_post_id :" , insta_post_id)
                 else:
-                    pprint(update_time)
-                    if(not update_time ):
+
+                    if(update_time[0] is None):
+                        print("更新貼文")
+                    else:
                         update_day = datetime.datetime.today() - update_time[0]
                         if(update_day.days <= 1):
                             print(i ," 一天內更新過 insta_post_id = " ,insta_post_id,"，跳至下一篇" )
                             continue
-                    else:
-                        print("更新貼文")
-                    
+                        else:
+                            print("更新貼文")
+
+
                     #更新 post / update_time 
 
                     sql = "SET SQL_SAFE_UPDATES = 0;" 
