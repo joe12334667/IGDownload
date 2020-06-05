@@ -56,7 +56,7 @@ def WriteAllHashTagsToMongoDB():
     collect = db["AllHashTags"]
     
     #抓出資料夾所有的檔案
-    files = listdir(os.getcwd() + "/"+ "HashTags")
+    files = listdir(os.getcwd() + "/"+ category)
     #pprint(files)
     dir =  "MongoDB_" + time.strftime("%Y-%m-%d_%H-%M") + category
 
@@ -66,6 +66,7 @@ def WriteAllHashTagsToMongoDB():
             continue
         #開檔
         file =open(os.getcwd() + "/"+ category + "/" + fileName , mode = 'r' , encoding="utf-8")
+        print('open ' , fileName)
         json_array = json.load(file)
 
         for items in json_array[category]:
