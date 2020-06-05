@@ -41,7 +41,8 @@ def DownloadHashtagsFromCategory(HashTags , RunTime):
             #    Allcaption.append(post.caption)
             text = post.caption
             for hashtag in post.caption_hashtags :
-                text.replace(hashtag , "")
+                text = text.replace("#"+hashtag , "")
+            #if is_all_chinese_And_English_and_Emoji(text):
             Allcaption.append(text)
             #print(text)
             #統計多少篇
@@ -69,8 +70,8 @@ def is_all_chinese(strs):
             return False
     return True
 
-def is_all_chinese_And_English(strs):
-    ret_search = re.search("^[\u4e00-\u9fa5_a-zA-Z0-9\-]+$",strs) #掃描整個字串返回第一個匹配到的元素並結束，匹配不到返回None
+def is_all_chinese_And_English_and_Emoji(strs):
+    ret_search = re.search("^[\u4e00-\u9fa5_a-zA-Z0-9\-\u00a9\u00ae\u2000-\u3300\ud83c\ud000-\udfff\ud83d\ud000-\udfff\ud83e\ud000-\udfff ]+$",strs) #掃描整個字串返回第一個匹配到的元素並結束，匹配不到返回None
     if(ret_search):
         return True
     return False
