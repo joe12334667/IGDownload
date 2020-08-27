@@ -12,7 +12,8 @@ def WriteCategoryHashTagsToMongoDB(category):
     categorylist = {"食" : "Food" , "衣" : "Clothes" , "住" :"Live" , "行" :"Travel" }
 
     #連接資料庫
-    myclient = pymongo.MongoClient(host='localhost', port=27017)
+    myclient = pymongo.MongoClient("mongodb+srv://joe12334667:joe12334667@captions.gjgzu.gcp.mongodb.net/Captions?retryWrites=true&w=majority")
+
     db = myclient["Hashtags"]
     collect = db[categorylist[category]]
     
@@ -48,7 +49,7 @@ def WriteAllHashTagsToMongoDB():
     print("Please wait")
     category = "Captions"
     #連接資料庫
-    myclient = pymongo.MongoClient(host='localhost', port=27017)
+    myclient = pymongo.MongoClient("mongodb+srv://joe12334667:joe12334667@captions.gjgzu.gcp.mongodb.net/Captions?retryWrites=true&w=majority")
     #DataBase
     db = myclient["Captions"]
     #collection = sheet
