@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>71fa60f0-409d-4253-a212-c6ad31e56bc0</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>AutoDownloadHashtag.py</StartupFile>
+    <StartupFile>insertContentToMongdb.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -26,6 +26,9 @@
     <Compile Include="addHashTagsToList.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DownloadContentMutiThread.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DownloadHashtagMutiThread.py">
       <SubType>Code</SubType>
     </Compile>
@@ -38,6 +41,7 @@
     <Compile Include="HashTagsINFO.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="insertContentToMongdb.py" />
     <Compile Include="module1.py">
       <SubType>Code</SubType>
     </Compile>
@@ -48,6 +52,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="module2.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="module4.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TestIG.py" />
