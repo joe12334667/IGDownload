@@ -46,16 +46,20 @@ def DownloadHashtagsFromCategory(HashTags , RunTime):
             for mention in post.caption_mentions :
                 text = text.replace(mention , "")
             
+            #字串清理
             text = text.replace("#" , "")
             text = text.replace("@" , "")
             text = text.strip()
+            #去除多餘空格
+            #字串以一個或多於一個的空格做分隔，再用一個空格作連接
+            text = " ".join(text.split())
 
             text = Change_to_all_chinese_And_English(text)
             if text == "":
                 continue
             
             Allcaption.append(text)
-            print(text)
+            #print(text)
             #統計多少篇
             if countRunTime == RunTime :
                 break
