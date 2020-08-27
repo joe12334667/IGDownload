@@ -5,6 +5,7 @@ chardet==3.0.4
 colorama==0.4.3
 Cython==0.29.13
 decorator==4.4.2
+dnspython==2.0.0
 et-xmlfile==1.0.1
 future==0.18.2
 huepy==1.2.1
@@ -50,4 +51,5 @@ update==0.0.1
 urllib3==1.25.8
 vadtk==0.0.4
 wcwidth==0.1.8
+zhon==1.1.5
 zipp==3.1.0
