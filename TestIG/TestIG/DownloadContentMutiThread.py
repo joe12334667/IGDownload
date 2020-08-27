@@ -12,6 +12,8 @@ import requests
 from lxml.html import fromstring
 from itertools import cycle
 import traceback
+from zhon import hanzi
+import string
 
 
 #--------------------------------DownloadHashtagsFromCategory----------------------------------------------------------
@@ -36,15 +38,24 @@ def DownloadHashtagsFromCategory(HashTags , RunTime):
                     continue
 
             countRunTime +=1
-            #確認是否新增進HashTags
-            #if is_all_chinese_And_English(post.caption):
-            #    Allcaption.append(post.caption)
+            #確認是否新增進caption
             text = post.caption
             for hashtag in post.caption_hashtags :
-                text = text.replace("#"+hashtag , "")
-            #if is_all_chinese_And_English_and_Emoji(text):
+                text = text.replace(hashtag ,"")
+
+            for mention in post.caption_mentions :
+                text = text.replace(mention , "")
+            
+            text = text.replace("#" , "")
+            text = text.replace("@" , "")
+            text = text.strip()
+
+            text = Change_to_all_chinese_And_English(text)
+            if text == "":
+                continue
+            
             Allcaption.append(text)
-            #print(text)
+            print(text)
             #統計多少篇
             if countRunTime == RunTime :
                 break
@@ -70,11 +81,17 @@ def is_all_chinese(strs):
             return False
     return True
 
-def is_all_chinese_And_English_and_Emoji(strs):
-    ret_search = re.search("^[\u4e00-\u9fa5_a-zA-Z0-9\-\u00a9\u00ae\u2000-\u3300\ud83c\ud000-\udfff\ud83d\ud000-\udfff\ud83e\ud000-\udfff ]+$",strs) #掃描整個字串返回第一個匹配到的元素並結束，匹配不到返回None
-    if(ret_search):
-        return True
-    return False
+def Change_to_all_chinese_And_English(strs):
+    ans = ""
+    for _char in strs:
+        if _char in hanzi.punctuation or _char in string.punctuation or _char == " ":
+            ans += _char
+            continue
+        ret_search = re.search("^[\u4e00-\u9fa5_a-zA-Z0-9]+$",_char) 
+        if(ret_search):
+            ans += _char
+    
+    return ans
 
 
 #--------------------------------is_contains_chinese----------------------------------------------------------
