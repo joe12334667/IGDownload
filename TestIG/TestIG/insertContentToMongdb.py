@@ -67,7 +67,7 @@ def WriteAllHashTagsToMongoDB():
         file =open(os.getcwd() + "/"+ category + "/" + fileName , mode = 'r' , encoding="utf-8")
         print('open ' , fileName)
         json_array = json.load(file)
-
+    
         for items in json_array['HashTags']:
             #print(items["hashtags"] , end =" , ")
             #pprint(items["AllHashTags"])
