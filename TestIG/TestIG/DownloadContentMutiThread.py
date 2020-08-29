@@ -14,6 +14,7 @@ from itertools import cycle
 import traceback
 from zhon import hanzi
 import string
+import langid
 
 
 #--------------------------------DownloadHashtagsFromCategory----------------------------------------------------------
@@ -57,8 +58,9 @@ def DownloadHashtagsFromCategory(HashTags , RunTime):
             text = Change_to_all_chinese_And_English(text)
             if text == "":
                 continue
-            
-            Allcaption.append(text)
+            if langid.classify(text)[0] == 'zh':
+                print(text)
+                Allcaption.append(text)
             #print(text)
             #統計多少篇
             if countRunTime == RunTime :
