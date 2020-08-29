@@ -15,7 +15,7 @@ import traceback
 from zhon import hanzi
 import string
 import langid
-
+from instaloader import Instaloader, Hashtag 
 
 #--------------------------------DownloadHashtagsFromCategory----------------------------------------------------------
 def DownloadHashtagsFromCategory(HashTags , RunTime):
@@ -59,7 +59,6 @@ def DownloadHashtagsFromCategory(HashTags , RunTime):
             if text == "":
                 continue
             if langid.classify(text)[0] == 'zh':
-                print(text)
                 Allcaption.append(text)
             #print(text)
             #統計多少篇
@@ -109,12 +108,17 @@ class Worker(threading.Thread):
         self.num = num
         self.requeue = requeue
         self.work = work
+        self.L = Instaloader()
     def run(self):
         while self.queue.qsize() > 0:
             # 取得新的資料
             HashTag = self.queue.get()
-            print("worker " , self.work , " ",HashTag)
-            self.requeue.put( DownloadHashtagsFromCategory(HashTag , self.num) )
+            l_hashtag = Hashtag.from_name(self.L.context, HashTag)
+
+            if l_hashtag.mediacount >= 10000:
+                print(">= 10000")
+                print("worker " , self.work , " ",l_hashtag)
+                self.requeue.put( DownloadHashtagsFromCategory(HashTag , self.num) )
 
 
 
@@ -129,12 +133,15 @@ class WorkerIncludeDownload(threading.Thread):
         #執行緒鎖
         self.lock = threading.Lock()
         self.data = data
+        self.L = Instaloader()
     def run(self):
         while self.queue.qsize() > 0:
             # 取得新的資料
             HashTag = self.queue.get()
-            print("worker " , self.work , " ",HashTag)
-            self.requeue.put( DownloadHashtagsFromCategory(HashTag , self.num))
+            l_hashtag = Hashtag.from_name(self.L.context, HashTag)
+            if l_hashtag.mediacount >= 10000:
+                print("worker " , self.work , " ",l_hashtag.name)
+                self.requeue.put( DownloadHashtagsFromCategory(l_hashtag.name , self.num))
 
             if self.requeue.qsize() >= 100 :
                 #鎖定資源 不讓其他執行緒跑
