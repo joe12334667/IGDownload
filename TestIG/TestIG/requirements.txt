@@ -33,6 +33,7 @@ pandas==1.1.1
 Pillow==7.0.0
 pip==20.2.2
 pluggy==0.13.1
+pprint==0.1
 proglog==0.1.9
 py==1.8.1
 pymongo==3.10.1
