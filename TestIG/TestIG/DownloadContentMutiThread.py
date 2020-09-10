@@ -59,7 +59,7 @@ def DownloadHashtagsFromCategory(HashTags , RunTime):
             if text == "":
                 continue
             if langid.classify(text)[0] == 'zh':
-                Allcaption.append(text)
+                Allcaption.append({"captions":text , "hashtags" : post.caption_hashtags})
             #print(text)
             #統計多少篇
             if countRunTime == RunTime :
@@ -67,9 +67,10 @@ def DownloadHashtagsFromCategory(HashTags , RunTime):
     except Exception as e:
         print("except:" , e)
     #轉set以實現不重複陣列
-    Allcaption = set(Allcaption)
+    #Allcaption = set(Allcaption)
 
-    data = {"HashTag" : HashTag , "Allcaptions" : list(Allcaption) , "Time" : time.strftime("%Y-%m-%d_%H-%M-%S")}
+    data = {"HashTag" : HashTag , "Allcaptions" : Allcaption , "Time" : time.strftime("%Y-%m-%d_%H-%M-%S")}
+    print(data)
     return data
 #--------------------------------DownloadHashtagsFromCategory----------------------------------------------------------
 #--------------------------------is_contains_chinese----------------------------------------------------------
