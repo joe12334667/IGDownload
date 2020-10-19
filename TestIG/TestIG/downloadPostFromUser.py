@@ -255,17 +255,35 @@ def downloadPostFromUser(post_user , time):
             
             print("結束一筆")
 
+def downloadPofileFromUser():
+    print("connect...") 
+    connection = pymysql.connect("140.131.114.143","root","superman12334667","instabuilder" ,  charset='utf8mb4' )
+    print("connect success")
+    l = Instaloader(quiet=True, compress_json=False , max_connection_attempts = 10)
+    #l.login("joe_try_something"  , "joejoe12334667")   
+    
+
+    with connection.cursor() as cursor:
+
+        sql = "SELECT account_name FROM instabuilder.instaaccount;"
+        cursor.execute(sql )
+        connection.commit()
+        ig_account_data = cursor.fetchall()
+        if(ig_account_data):
+            for account in  ig_account_data:    
+                print(account[0])
+                profile = Profile.from_username(l.context , account[0])
+                sql = "insert into instabuilder.instaaccountfollower (account_id, fans_amount, follow_amont, post_amont, record_time) value ((SELECT account_id FROM instabuilder.instaaccount where account_name = %s), %s ,%s ,%s  , now() );"
+                cursor.execute(sql , (account[0] ,profile.followers , profile.followees , profile.mediacount ) )
+                connection.commit()
+    
+    connection.close()
 
 
 
 
-
-
-
-
-
-
-downloadPostFromUser('yun_cyjack' , 20)
+downloadPofileFromUser()
+#downloadPostFromUser('joe12334667' , 20)
 
 
 
