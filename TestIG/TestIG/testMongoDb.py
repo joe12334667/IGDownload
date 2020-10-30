@@ -5,7 +5,7 @@ import os
 import time
 import shutil 
 from os import listdir
-from pprint import pprint
+
 #--------------------------------------WriteCategoryHashTagsToMongoDB--------------------------------------------
 def WriteCategoryHashTagsToMongoDB(category):
 
@@ -19,7 +19,7 @@ def WriteCategoryHashTagsToMongoDB(category):
     
 
     files = listdir(os.getcwd() + "/"+ category)
-    #pprint(files)
+    #print(files)
     dir =  "MongoDB_" + time.strftime("%Y-%m-%d_%H-%M") + category
 
     for fileName in files:
@@ -57,7 +57,7 @@ def WriteAllHashTagsToMongoDB():
     
     #抓出資料夾所有的檔案
     files = listdir(os.getcwd() + "/"+ category)
-    #pprint(files)
+    #print(files)
     dir =  "MongoDB_" + time.strftime("%Y-%m-%d_%H-%M") + category
 
     for fileName in files:
@@ -71,7 +71,7 @@ def WriteAllHashTagsToMongoDB():
 
         for items in json_array[category]:
             #print(items["hashtags"] , end =" , ")
-            #pprint(items["AllHashTags"])
+            #print(items["AllHashTags"])
             #寫入資料庫
             post_id = collect.insert_one(items).inserted_id
             #print(post_id)
