@@ -13,16 +13,14 @@ def downloadUserFollowers(user):
     print("connect success")
     i = 0
     l = Instaloader(quiet=True, compress_json=False , max_connection_attempts = 10)
-
     profile = Profile.from_username(l.context , user)
-        with connection.cursor() as cursor:
-            for follower in profile.getfollowers() :
-                sql = "insert into followers (id, account_id, name, follow_date) value (%s ,(select account_id from instaaccount where account_name = %s) , %s ,now());"
-                cursor.execute(sql , ( follower.userid , user , profile.username))
-                connection.commit()
+    l.login("joe12334667"  , "joe12369874")  
     
+    cursor = connection.cursor()
+    for follower in profile.get_followers() :
+        sql = "insert into followers (id, account_id, name, follow_date) value (%s ,(select account_id from instaaccount where account_name = %s) , %s ,now());"
+        cursor.execute(sql , ( follower.userid , user , profile.username))
+        connection.commit()
 
 
-
-
-downloadUserFollowers("joe_try_something")
+downloadUserFollowers("13_23_33_")
