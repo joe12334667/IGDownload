@@ -14,7 +14,7 @@ def downloadUserFollowers(user):
     i = 0
     l = Instaloader(quiet=True, compress_json=False , max_connection_attempts = 10)
     profile = Profile.from_username(l.context , user)
-    l.login("joe12334667"  , "joe12369874")  
+    l.login("joe_try_something"  , "joe12334667")  
     
     cursor = connection.cursor()
     for follower in profile.get_followers() :
