@@ -7,8 +7,8 @@ from datetime import timedelta
 
 def downloadPostFromUser(post_user , time):
     print("connect...") 
-    connection = pymysql.connect("140.131.114.143","root","superman12334667","instabuilder" ,  charset='utf8mb4' )
-    #connection = pymysql.connect("instabuilderdb.cmjbghjyygh8.ap-northeast-1.rds.amazonaws.com","root","superman12334667","instabuilder" ,  charset='utf8mb4' )
+    #connection = pymysql.connect("140.131.114.143","root","superman12334667","instabuilder" ,  charset='utf8mb4' )
+    connection = pymysql.connect("instabuilderdb.cmjbghjyygh8.ap-northeast-1.rds.amazonaws.com","root","superman12334667","instabuilder" ,  charset='utf8mb4' )
 
     print("connect success")
     i = 0
@@ -258,8 +258,8 @@ def downloadPostFromUser(post_user , time):
 
 def downloadPofileFromUser():
     print("connect...") 
-    connection = pymysql.connect("140.131.114.143","root","superman12334667","instabuilder" ,  charset='utf8mb4' )
-    #connection = pymysql.connect("instabuilderdb.cmjbghjyygh8.ap-northeast-1.rds.amazonaws.com","root","superman12334667","instabuilder" ,  charset='utf8mb4' )
+    #connection = pymysql.connect("140.131.114.143","root","superman12334667","instabuilder" ,  charset='utf8mb4' )
+    connection = pymysql.connect("instabuilderdb.cmjbghjyygh8.ap-northeast-1.rds.amazonaws.com","root","superman12334667","instabuilder" ,  charset='utf8mb4' )
 
     print("connect success")
     l = Instaloader(quiet=True, compress_json=False , max_connection_attempts = 10)
@@ -285,8 +285,8 @@ def downloadPofileFromUser():
 
 
 
-#downloadPostFromUser('alisaj_1105' , 20)
-downloadPofileFromUser()
+downloadPostFromUser('13_23_33_' , 20)
+#downloadPofileFromUser()
 
 
 
