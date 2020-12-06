@@ -12,7 +12,7 @@ def sample_analyze_sentiment(text_content):
       text_content The text content to analyze
     return {"score" ,  "magnitude"}
     """
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"]= os.getcwd() + "/GCPKey.json"
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"]= os.getcwd() + "/GCPKey2.json"
     client = language_v1.LanguageServiceClient()
 
     # text_content = 'I am so happy and joyful.'
