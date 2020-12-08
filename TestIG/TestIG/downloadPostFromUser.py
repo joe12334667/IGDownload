@@ -13,7 +13,7 @@ def downloadPostFromUser(post_user , time):
     print("connect success")
     i = 0
     l = Instaloader(quiet=True, compress_json=False , max_connection_attempts = 10)
-    #l.login("joe_try_something"  , "joejoe12334667")   
+    l.login("joe_try_something"  , "joe12334667")   
     profile = Profile.from_username(l.context , post_user)
     posts = profile.get_posts()
     for post in posts :
@@ -285,7 +285,7 @@ def downloadPofileFromUser():
 
 
 
-downloadPostFromUser('13_23_33_' , 20)
+downloadPostFromUser( 'joe_try_something' , 10)
 #downloadPofileFromUser()
 
 
