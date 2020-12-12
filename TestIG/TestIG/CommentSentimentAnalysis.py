@@ -64,7 +64,7 @@ def sample_analyze_sentiment(text_content):
 
 
 print("connect...") 
-connection = pymysql.connect("140.131.114.143","root","superman12334667","instabuilder" ,  charset='utf8mb4' )
+connection = pymysql.connect("instabuilderdb.cmjbghjyygh8.ap-northeast-1.rds.amazonaws.com","root","superman12334667","instabuilder" ,  charset='utf8mb4' )
 print("connect success")
 with connection.cursor() as cursor:
     sql = "SELECT * FROM instabuilder.comment where isnull(pn)"
