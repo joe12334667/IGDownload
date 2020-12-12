@@ -18,11 +18,11 @@ import langid
 from instaloader import Instaloader, Hashtag 
 
 #--------------------------------DownloadHashtagsFromCategory----------------------------------------------------------
-def DownloadHashtagsFromCategory(HashTags , RunTime):
+def DownloadHashtagsFromCategory(HashTags , RunTime ,L):
     HashTag = "#"+ HashTags
     lock = threading.Lock() 
     # Get instance
-    L = Instaloader(quiet=True, compress_json=False , max_connection_attempts = 10)
+    #L = Instaloader(quiet=True, compress_json=False , max_connection_attempts = 10)
 
     Allcaption = list()
     
@@ -124,7 +124,7 @@ class Worker(threading.Thread):
 
 
 class WorkerIncludeDownload(threading.Thread):
-    def __init__(self, queue , requeue , data , num ,work):
+    def __init__(self, queue , requeue , data , num ,work ,L):
         threading.Thread.__init__(self)
         self.queue = queue
         self.num = num
@@ -134,7 +134,7 @@ class WorkerIncludeDownload(threading.Thread):
         #執行緒鎖
         self.lock = threading.Lock()
         self.data = data
-        self.L = Instaloader()
+        self.L = L
     def run(self):
         while self.queue.qsize() > 0:
             # 取得新的資料
@@ -142,7 +142,7 @@ class WorkerIncludeDownload(threading.Thread):
             l_hashtag = Hashtag.from_name(self.L.context, HashTag)
             if l_hashtag.mediacount >= 10000:
                 print("worker " , self.work , " ",l_hashtag.name)
-                self.requeue.put( DownloadHashtagsFromCategory(l_hashtag.name , self.num))
+                self.requeue.put( DownloadHashtagsFromCategory(l_hashtag.name , self.num , self.L))
 
             if self.requeue.qsize() >= 100 :
                 #鎖定資源 不讓其他執行緒跑
@@ -272,6 +272,8 @@ def DownloadAllHashTags(RunTime):
     i = 0
     time_start = time.time()
     try :
+        L = Instaloader(quiet=True, compress_json=False , max_connection_attempts = 10)
+        L.login("joe_try_something"  , "joe12334667")   
         while HashTagQueue.qsize() > 0:
             
             if  i >= 10 :
@@ -286,19 +288,19 @@ def DownloadAllHashTags(RunTime):
 
             # 建立兩個 Worker
             #WorkerIncludeDownload 包含每抓完一百的HashTags,自動寫成JSON
-            my_worker1 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 1)
-            my_worker2 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 2)
+            my_worker1 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 1 ,L)
+            #my_worker2 = WorkerIncludeDownload(HashTagQueue, ReQueue , data , RunTime , 2)
 
             # 讓 Worker 開始處理資料
             print("my_worker1 start")
             my_worker1.start()
             time.sleep(3)
-            print("my_worker2 start")
-            my_worker2.start()
+            #print("my_worker2 start")
+            #my_worker2.start()
             # 等待所有 Worker 結束
             #生命週期60s
             my_worker1.join(60)
-            my_worker2.join(60)
+            #my_worker2.join(60)
 
     except:
         switch_proxy()
