@@ -18,7 +18,7 @@ langid==1.1.6
 lxml==4.6.1
 numpy==1.19.3
 oauthlib==3.1.0
-pip==20.2.3
+pip==23.3
 protobuf==3.14.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
